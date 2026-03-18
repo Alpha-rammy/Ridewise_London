@@ -8,6 +8,7 @@ build/
 develop-eggs/
 dist/
 downloads/
+solution/
 eggs/
 .eggs/
 lib/
@@ -81,3 +82,4 @@ htmlcov/
 !logs/.gitkeep
 !reports/figures/.gitkeep
 !reports/metrics/.gitkeep
+.claude
