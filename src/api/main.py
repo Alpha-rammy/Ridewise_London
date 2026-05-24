@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import joblib
 import os
 import uvicorn
+from src.models.predict import predict_churn
 
 # =========================================================
 # PATHS
