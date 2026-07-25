@@ -1,644 +1,1118 @@
-# 🚀 RideWise: Customer Segmentation & Churn Prediction Engine
+# 🚀 RideWise London
+## Customer Intelligence: Churn Prediction & Customer Segmentation
 
-<div align="center">
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-Machine%20Learning-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3+-orange.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Status](https://img.shields.io/badge/Status-Active-success.svg)
+RideWise London is an end-to-end machine learning project that investigates customer behaviour within a fictional ride-hailing platform.
 
-**Advanced Customer Analytics & Predictive Modeling for European Mobility Markets**
+The project combines supervised and unsupervised machine learning techniques to analyse rider behaviour, predict customer churn, identify meaningful customer segments, and generate business recommendations for improving customer retention.
 
-[Features](#-key-features) • [Architecture](#-system-architecture) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
-
-</div>
+Unlike many portfolio projects that focus only on achieving high model performance, this project follows an evidence-based approach by evaluating whether historical behavioural data contains sufficient predictive signal for future churn. The project also demonstrates how unsupervised learning can provide valuable business insights even when predictive performance is limited.
 
 ---
 
-## 📋 Table of Contents
+# 📋 Table of Contents
 
-- [Overview](#-overview)
-- [Business Context](#-business-context)
-- [Key Features](#-key-features)
-- [System Architecture](#-system-architecture)
-- [Project Structure](#-project-structure)
-- [Technology Stack](#-technology-stack)
-- [Quick Start](#-quick-start)
-- [Data Pipeline](#-data-pipeline)
-- [Model Development](#-model-development)
-- [API Documentation](#-api-documentation)
-- [Evaluation Metrics](#-evaluation-metrics)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [License](#-license)
-
----
-
-## 🎯 Overview
-
-**RideWise** is an end-to-end machine learning system designed to solve customer retention challenges in the European mobility sector. This project demonstrates production-grade data science practices including:
-
-- ✅ **Customer Segmentation** using unsupervised learning (K-Means)
-- ✅ **Churn Prediction** with interpretable ML models (Logistic Regression, Random Forest)
-- ✅ **Feature Engineering** pipelines (RFM analysis, behavioral metrics, temporal features)
-- ✅ **Real-time Scoring API** built with FastAPI
-- ✅ **Interactive Analytics Dashboard** using Streamlit
-- ✅ **Comprehensive Testing** and model validation frameworks
-
-### 📊 Project Scope
-
-| Metric                  | Value                                                           |
-| ----------------------- | --------------------------------------------------------------- |
-| **Industry**            | Transportation Technology / Mobility                            |
-| **Geographic Coverage** | 5 European Cities (London, Berlin, Amsterdam, Barcelona, Milan) |
-| **Dataset Size**        | 200,000+ customers, 800,000+ trips, 1.5M+ sessions              |
-| **Time Period**         | 12 months (2025)                                                |
-| **Project Duration**    | 3 weeks (Mid-level Data Scientist)                              |
-| **Deployment**          | Local + Cloud-ready (Heroku/AWS)                                |
+- Overview
+- Business Problem
+- Project Objectives
+- Dataset Description
+- Project Workflow
+- Project Structure
+- Technology Stack
+- Data Preprocessing
+- Feature Engineering
+- Customer Segmentation
+- Churn Prediction
+- Model Explainability
+- Results
+- Business Recommendations
+- Limitations
+- Future Improvements
+- Installation
+- How to Run
+- License
 
 ---
 
-## 🏢 Business Context
+---
 
-### The Challenge
+# 🏢 Business Challenge
 
-RideWise, a fictional European mobility platform, faces critical customer retention issues:
+RideWise London is a fictional ride-hailing company operating across multiple cities. Like many mobility platforms, the company faces increasing customer acquisition costs and growing competition, making customer retention a strategic priority.
 
-- 📉 **25% quarterly churn rate** among regular users
-- 💸 **Low promotion campaign ROI** with unclear effectiveness measurement
-- ⏱️ **Weeks-long manual analysis** limiting business agility
-- 🎯 **No predictive capability** to identify at-risk customers proactively
-- 📊 **Limited behavioral insights** for customer differentiation
+Although RideWise collects large volumes of customer, trip and operational data, the business lacks a structured approach to understanding customer behaviour and identifying riders who may be at risk of leaving the platform.
 
-### The Solution
+The company faces several key challenges:
 
-A data-driven customer analytics engine that:
+- 📉 Limited visibility into customer behaviour and engagement patterns.
+- 🚕 Difficulty identifying riders who are becoming inactive before they stop using the platform.
+- 💰 Inefficient marketing campaigns that target broad customer groups rather than high-value or at-risk riders.
+- 📊 Limited customer segmentation to support personalised promotions and loyalty programmes.
+- 🎯 Lack of data-driven insights to guide customer retention strategies.
 
-1. **Segments customers** into actionable behavioral groups
-2. **Predicts churn risk** 60 days in advance with >80% AUC
-3. **Provides real-time scoring** via REST API (<1s latency)
-4. **Delivers business insights** through interactive dashboards
-5. **Enables targeted interventions** with segment-specific strategies
+To address these challenges, this project develops an end-to-end customer intelligence solution that combines behavioural feature engineering, machine learning and customer segmentation.
 
-### Business Impact
+The project focuses on answering two key business questions:
 
-- 🎯 Identify top 15% at-risk customers for retention campaigns
-- 💰 Optimize marketing spend through segment-based targeting
-- 📈 Reduce churn rate by 10-15% through proactive interventions
-- ⚡ Enable real-time decision-making for customer operations
+1. Can historical rider behaviour be used to predict future customer churn?
+
+2. Can customers be grouped into meaningful behavioural segments that support targeted retention and marketing strategies?
+---
+
+# 🎯 Project Objectives
+
+The objectives of this project are to:
+
+- Build a complete end-to-end machine learning workflow.
+- Clean and prepare raw customer and trip datasets.
+- Engineer behavioural and temporal customer features.
+- Develop machine learning models to predict customer churn.
+- Compare multiple classification algorithms.
+- Explain model behaviour using feature importance and SHAP.
+- Discover natural customer groups using K-Means clustering.
+- Evaluate cluster quality using the Elbow Method and Silhouette Score.
+- Translate analytical findings into actionable business recommendations.
 
 ---
 
-## ✨ Key Features
+# 📊 Dataset Description
 
-### 🔍 Customer Segmentation
+The project uses a synthetic ride-hailing dataset consisting of multiple related tables.
 
-- **K-Means Clustering** with optimal cluster selection (Elbow Method, Silhouette Score)
-- **RFM Analysis** (Recency, Frequency, Monetary) for behavioral profiling
-- **Segment Profiling** with business-friendly descriptions
-- **Visualization** of segment characteristics and distributions
+| Dataset | Description |
+|---------|-------------|
+| Riders | Customer demographic and account information |
+| Trips | Historical trip transactions and fare information |
+| Drivers | Driver ratings and operational information |
+| Sessions | Customer application usage data |
+| Promotions | Marketing campaign information |
 
-### 🎯 Churn Prediction
+The target variable was created using a temporal prediction approach rather than relying on a predefined churn label.
 
-- **Multiple Models:** Logistic Regression (baseline), Random Forest (ensemble)
-- **Feature Engineering:** 50+ behavioral, temporal, and contextual features
-- **Class Imbalance Handling:** SMOTE, class weights, threshold optimization
-- **Model Interpretability:** Feature importance, SHAP values, business rules
-
-### 🚀 Production-Ready API
-
-- **FastAPI Framework** with automatic OpenAPI documentation
-- **Real-time Scoring** endpoints for customer risk assessment
-- **Batch Prediction** support for campaign planning
-- **Health Monitoring** and performance logging
-- **Dockerized Deployment** for cloud platforms
-
-### 📊 Analytics Dashboard
-
-- **Streamlit Interface** with interactive visualizations
-- **Segment Performance** tracking and comparison
-- **Churn Risk Distribution** by customer cohorts
-- **Campaign Effectiveness** measurement and ROI analysis
-- **Data Quality Monitoring** with automated alerts
+Historical customer behaviour was used to determine whether a rider remained active during a future prediction window.
 
 ---
 
-## 🏗️ System Architecture
+# 🔄 Project Workflow
 
-### High-Level Architecture
+The project follows a structured machine learning workflow:
 
-```mermaid
-graph TB
-    subgraph "Data Layer"
-        A1[Raw CSV Files] --> A2[SQLite Database]
-        A2 --> A3[Data Validation]
-    end
+1. Data Preprocessing
+2. Feature Engineering
+3. Customer Churn Prediction
+4. Model Explainability
+5. Customer Segmentation using K-Means
+6. Business Recommendations
 
-    subgraph "Feature Engineering"
-        A3 --> B1[RFM Analysis]
-        A3 --> B2[Behavioral Metrics]
-        A3 --> B3[Temporal Features]
-        B1 --> B4[Feature Store]
-        B2 --> B4
-        B3 --> B4
-    end
+This workflow reflects a real-world data science pipeline from raw data to business insights.
 
-    subgraph "ML Models"
-        B4 --> C1[Customer Segmentation<br/>K-Means]
-        B4 --> C2[Churn Prediction<br/>Logistic Regression]
-        B4 --> C3[Churn Prediction<br/>Random Forest]
-    end
+---
 
-    subgraph "Serving Layer"
-        C1 --> D1[Model Registry]
-        C2 --> D1
-        C3 --> D1
-        D1 --> D2[FastAPI Server]
-    end
+# 🏆 Key Features
 
-    subgraph "Application Layer"
-        D2 --> E1[Analytics Dashboard<br/>Streamlit]
-        D2 --> E2[Business Intelligence<br/>Reports]
-        D2 --> E3[Monitoring & Logging]
-    end
+✅ End-to-end machine learning workflow
 
-    style A1 fill:#e1f5ff
-    style A2 fill:#e1f5ff
-    style B4 fill:#fff4e1
-    style C1 fill:#f0e1ff
-    style C2 fill:#f0e1ff
-    style C3 fill:#f0e1ff
-    style D2 fill:#e1ffe1
-    style E1 fill:#ffe1e1
+✅ Leakage-free temporal feature engineering
+
+✅ Customer churn prediction using multiple machine learning models
+
+✅ Feature importance and SHAP explainability
+
+✅ K-Means customer segmentation
+
+✅ Elbow Method for selecting the optimal number of clusters
+
+✅ Silhouette Score for cluster validation
+
+✅ Business-focused customer profiling
+
+✅ Actionable customer retention recommendations
+
+---
+
+# 📁 Project Structure
+
+```text
+RideWise_London/
+│
+├── data/
+│   ├── raw/
+│   │   ├── riders.csv
+│   │   ├── trips.csv
+│   │   ├── drivers.csv
+│   │   ├── sessions.csv
+│   │   └── promotions.csv
+│   │
+│   └── processed/
+│       ├── riders_clean.csv
+│       ├── trips_clean.csv
+│       ├── drivers_clean.csv
+│       ├── sessions_clean.csv
+│       ├── features.csv
+│       └── segment_assignment.csv
+│
+├── models/
+│   └── ridewise_xgboost_diagnostic_pipeline.pkl
+│
+├── notebooks/
+│   ├── 01_preprocessing.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_churn_prediction.ipynb
+│   ├── 04_explainability.ipynb
+│   └── 05_customer_segmentation_and_clustering.ipynb
+│
+├── reports/
+│   └── figures/
+│
+├── README.md
+├── requirements.txt
+├── .gitignore
+└── LICENSE
 ```
 
-### Data Flow Pipeline
+The project follows a structured machine learning workflow, progressing from raw data preprocessing through feature engineering, predictive modelling, explainability and customer segmentation.
 
-```mermaid
-flowchart LR
-    A[Raw Data<br/>5 CSV Tables] --> B{Data Quality<br/>Validation}
-    B -->|Pass| C[Feature<br/>Engineering]
-    B -->|Fail| Z[Error Logs]
-    C --> D[Train/Test<br/>Split]
-    D --> E[Model<br/>Training]
-    E --> F[Model<br/>Evaluation]
-    F -->|AUC > 0.80| G[Model<br/>Registry]
-    F -->|AUC < 0.80| E
-    G --> H[API<br/>Deployment]
-    H --> I[Production<br/>Monitoring]
-
-    style A fill:#4A90E2
-    style C fill:#F5A623
-    style E fill:#7ED321
-    style G fill:#BD10E0
-    style H fill:#50E3C2
-```
-
-### ML Model Pipeline
-
-```mermaid
-graph LR
-    subgraph Input
-        A[Customer Data] --> B[Feature Vector]
-    end
-
-    subgraph Preprocessing
-        B --> C[Missing Value<br/>Imputation]
-        C --> D[Feature Scaling<br/>StandardScaler]
-        D --> E[Feature Selection<br/>Top 30 Features]
-    end
-
-    subgraph Models
-        E --> F1[Segmentation<br/>K-Means k=4]
-        E --> F2[Churn Baseline<br/>Logistic Regression]
-        E --> F3[Churn Ensemble<br/>Random Forest]
-    end
-
-    subgraph Output
-        F1 --> G[Segment Label<br/>+ Probabilities]
-        F2 --> H[Churn Score<br/>0.0 - 1.0]
-        F3 --> H
-    end
-
-    style A fill:#E3F2FD
-    style E fill:#FFF3E0
-    style F1 fill:#F3E5F5
-    style F2 fill:#F3E5F5
-    style F3 fill:#F3E5F5
-    style G fill:#E8F5E9
-    style H fill:#E8F5E9
-```
+Each notebook focuses on a single stage of the workflow, making the project easy to understand, reproduce and extend.
 
 ---
 
-## 📁 Project Structure
+# 🛠️ Technology Stack
 
-```
-Ridewise_10Alytics/
-│
-├── 📂 data/                          # Data storage (see data/README.md for data dictionary)
-│   ├── raw/                          # Immutable source data (CSV files)
-│   │   ├── riders.csv                # Customer profiles (200K+ records)
-│   │   ├── trips.csv                 # Trip transactions (800K+ records)
-│   │   ├── drivers.csv               # Driver information (50K+ records)
-│   │   ├── sessions.csv              # App engagement data (1.5M+ records)
-│   │   └── promotions.csv            # Marketing campaigns (500+ records)
-│   ├── processed/                    # Transformed data for modeling
-│   │   ├── features_train.csv        # Training features
-│   │   ├── features_test.csv         # Test features
-│   │   └── segments.csv              # Customer segment assignments
-│   └── README.md                     # 📖 Comprehensive data dictionary
-│
-├── 📂 notebooks/                     # Jupyter notebooks for exploration
-│   ├── 01_eda.ipynb                  # Exploratory Data Analysis
-│   ├── 02_feature_engineering.ipynb  # Feature creation & selection
-│   ├── 03_segmentation.ipynb         # Customer segmentation analysis
-│   ├── 04_churn_modeling.ipynb       # Churn prediction experiments
-│   └── 05_model_evaluation.ipynb     # Performance analysis & interpretation
-│
-├── 📂 src/                           # Source code (production-ready)
-│   ├── __init__.py
-│   ├── data/                         # Data processing modules
-│   │   ├── __init__.py
-│   │   ├── ingestion.py              # Data loading & validation
-│   │   ├── preprocessing.py          # Cleaning & transformation
-│   │   └── validation.py             # Data quality checks
-│   ├── features/                     # Feature engineering
-│   │   ├── __init__.py
-│   │   ├── rfm.py                    # RFM analysis
-│   │   ├── behavioral.py             # Behavioral metrics
-│   │   └── temporal.py               # Time-based features
-│   ├── models/                       # ML model implementations
-│   │   ├── __init__.py
-│   │   ├── segmentation.py           # K-Means clustering
-│   │   ├── churn_predictor.py        # Churn prediction models
-│   │   ├── trainer.py                # Training pipeline
-│   │   └── evaluator.py              # Model evaluation
-│   └── api/                          # FastAPI application
-│       ├── __init__.py
-│       ├── main.py                   # API entry point
-│       ├── routes.py                 # Endpoint definitions
-│       ├── schemas.py                # Pydantic models
-│       └── utils.py                  # Helper functions
-│
-├── 📂 tests/                         # Unit & integration tests
-│   ├── __init__.py
-│   ├── test_data_processing.py
-│   ├── test_features.py
-│   ├── test_models.py
-│   └── test_api.py
-│
-├── 📂 models/                        # Saved model artifacts
-│   ├── segmentation_kmeans.pkl       # Trained segmentation model
-│   ├── churn_logistic.pkl            # Logistic regression model
-│   ├── churn_rf.pkl                  # Random forest model
-│   └── scaler.pkl                    # Feature scaler
-│
-├── 📂 reports/                       # Analysis outputs
-│   ├── figures/                      # Visualizations
-│   ├── metrics/                      # Model performance logs
-│   └── business_insights.md          # Executive summary
-│
-├── 📂 config/                        # Configuration files
-│   ├── config.yaml                   # Project settings
-│   └── logging.yaml                  # Logging configuration
-│
-├── 📂 scripts/                       # Utility scripts
-│   ├── train_models.py               # Model training script
-│   ├── generate_predictions.py       # Batch prediction
-│   └── deploy.sh                     # Deployment automation
-│
-├── 📂 dashboard/                     # Streamlit dashboard
-│   ├── app.py                        # Main dashboard application
-│   └── components/                   # Dashboard components
-│
-├── 📄 requirements.txt               # Python dependencies
-├── 📄 Dockerfile                     # Container configuration
-├── 📄 docker-compose.yml             # Multi-container setup
-├── 📄 .gitignore                     # Git ignore rules
-├── 📄 LICENSE                        # MIT License
-└── 📄 README.md                      # This file
-
-```
+| Category | Technologies |
+|-----------|--------------|
+| Programming | Python 3.12 |
+| Data Processing | pandas, NumPy |
+| Data Visualisation | Matplotlib, Seaborn |
+| Machine Learning | scikit-learn |
+| Explainable AI | SHAP |
+| Clustering | K-Means, Elbow Method, Silhouette Score |
+| Model Persistence | Joblib |
+| Development Environment | Jupyter Notebook, VS Code |
+| Version Control | Git, GitHub |
 
 ---
 
-## 🛠️ Technology Stack
+# ⚙️ Machine Learning Workflow
 
-### Core ML & Data Science
+The project follows a reproducible end-to-end machine learning workflow:
 
-| Category                 | Technologies                                      |
-| ------------------------ | ------------------------------------------------- |
-| **Machine Learning**     | scikit-learn 1.3+, XGBoost (optional)             |
-| **Data Processing**      | pandas 2.0+, NumPy 1.24+                          |
-| **Feature Engineering**  | Custom pipelines, RFM analysis, category_encoders |
-| **Model Interpretation** | SHAP, feature importance, business rules          |
-| **Visualization**        | matplotlib, seaborn, plotly                       |
+```text
+Raw Data
+    │
+    ▼
+Data Preprocessing
+    │
+    ▼
+Feature Engineering
+    │
+    ▼
+Customer Segmentation
+(K-Means)
+    │
+    ▼
+Churn Prediction
+(Logistic Regression, Random Forest, XGBoost)
+    │
+    ▼
+Model Explainability
+(SHAP & Feature Importance)
+    │
+    ▼
+Business Insights &
+Recommendations
+```
 
-### Backend & API
+This workflow reflects a real-world data science process by combining supervised learning, unsupervised learning and explainable AI to support business decision-making.
 
-| Category          | Technologies                                        |
-| ----------------- | --------------------------------------------------- |
-| **API Framework** | FastAPI 0.104+ with Pydantic validation             |
-| **Database**      | SQLite (development), PostgreSQL (production-ready) |
-| **Caching**       | Redis (optional for production)                     |
-| **Task Queue**    | Celery (optional for batch jobs)                    |
-
-### Frontend & Deployment
-
-| Category             | Technologies                        |
-| -------------------- | ----------------------------------- |
-| **Dashboard**        | Streamlit 1.28+                     |
-| **Containerization** | Docker, Docker Compose              |
-| **CI/CD**            | GitHub Actions (optional)           |
-| **Cloud Platforms**  | Heroku, AWS, GCP (deployment-ready) |
-
-### Development Tools
-
-| Category            | Technologies        |
-| ------------------- | ------------------- |
-| **Testing**         | pytest, pytest-cov  |
-| **Code Quality**    | black, flake8, mypy |
-| **Documentation**   | Sphinx, MkDocs      |
-| **Version Control** | Git, GitHub         |
 
 ---
 
-## 🚀 Quick Start
+# 🧹 Data Preprocessing
 
-### Prerequisites
+High-quality data is essential for reliable machine learning models. Before feature engineering and modelling, each dataset underwent a comprehensive preprocessing pipeline to improve data quality and ensure consistency.
 
-- Python 3.9 or higher
-- pip package manager
-- Git
-- (Optional) Docker for containerized deployment
+The preprocessing stage included:
 
-### Installation
+### Riders
 
-1. **Clone the repository**
+- Standardised column names and text values.
+- Removed duplicate records.
+- Validated customer ages and account information.
+- Created a referral indicator from referral information.
+- Corrected inconsistent data types.
+
+### Trips
+
+- Converted date and time fields to datetime format.
+- Removed invalid trip records.
+- Validated fare amounts and surge multipliers.
+- Calculated trip duration.
+- Checked geographical coordinates for invalid values.
+- Standardised numerical and categorical variables.
+
+### Drivers
+
+- Removed duplicate driver records.
+- Validated driver ratings and acceptance rates.
+- Checked vehicle information for consistency.
+
+### Sessions
+
+- Converted session timestamps to datetime format.
+- Validated session duration and application activity.
+- Removed invalid session records.
+
+### Promotions
+
+- Standardised categorical variables.
+- Validated promotion dates and campaign information.
+- Removed duplicate campaign records.
+
+### Data Quality Checks
+
+The following validation checks were performed across all datasets:
+
+- Missing value assessment
+- Duplicate detection
+- Invalid numerical values
+- Inconsistent categorical values
+- Datetime validation
+- Data type verification
+- Referential integrity between related datasets
+
+These preprocessing steps produced clean, consistent datasets that served as the foundation for feature engineering and machine learning.
+
+---
+
+---
+
+# ⚙️ Feature Engineering
+
+Feature engineering transformed raw customer and trip data into meaningful behavioural variables that better represent customer activity and purchasing patterns.
+
+A temporal modelling approach was used to prevent data leakage by ensuring that only information available before the prediction window was used to generate features.
+
+## Target Variable
+
+Rather than relying on a predefined churn label, a new target variable was created using a temporal prediction framework.
+
+The dataset was divided into:
+
+- **Observation Window:** Historical customer behaviour used for feature engineering.
+- **Prediction Window:** The following 60-day period used to determine whether a customer remained active.
+
+A customer was labelled as:
+
+- **Churned (1):** No trips during the prediction window.
+- **Active (0):** At least one trip during the prediction window.
+
+This approach better reflects how churn prediction is performed in real-world business environments.
+
+---
+
+## Customer Features
+
+Customer-level attributes were created to describe rider characteristics and account history, including:
+
+- Account age
+- Account age in months
+- Referral status
+- Loyalty status
+- Customer demographics
+
+These features provide context about customer maturity and long-term engagement.
+
+---
+
+## RFM Features
+
+Recency, Frequency and Monetary (RFM) metrics were generated to summarise customer purchasing behaviour.
+
+### Recency
+
+Measures how recently a customer completed a trip.
+
+Examples:
+
+- Days since last trip
+- Average days between trips
+
+### Frequency
+
+Measures how often a customer uses the platform.
+
+Examples:
+
+- Total trips
+- Trips in the last 30 days
+- Trips in the last 60 days
+- Trips in the last 90 days
+- Monthly trip frequency
+
+### Monetary
+
+Measures customer spending behaviour.
+
+Examples:
+
+- Total spend
+- Average fare
+- Average spend per trip
+- Customer lifetime value
+
+---
+
+## Behavioural Features
+
+Additional behavioural features were engineered to better capture customer usage patterns.
+
+Examples include:
+
+- Average trip duration
+- Average surge multiplier
+- Average tip
+- Average tip rate
+- Peak-hour trip ratio
+- Weekend trip ratio
+- Rainy-day trip ratio
+
+These features help describe how customers interact with the RideWise platform beyond simple trip counts.
+
+---
+
+## Driver Interaction Features
+
+Driver-related features were aggregated to reflect the quality of customer-driver interactions.
+
+Examples include:
+
+- Average driver rating
+- Average driver acceptance rate
+- Preferred vehicle type
+
+These variables provide additional behavioural context that may influence customer satisfaction and retention.
+
+---
+
+## Session Features
+
+The sessions dataset was evaluated for potential engagement features.
+
+However, exploratory analysis showed that session records covered only a limited time period and contained insufficient historical information for reliable feature engineering.
+
+To avoid introducing large numbers of missing values and unreliable predictors, session-derived features were excluded from the final modelling dataset.
+
+---
+
+## Final Feature Set
+
+The final modelling dataset combined customer, behavioural, temporal and RFM features into a single feature table suitable for both supervised and unsupervised machine learning.
+
+The dataset was validated to ensure:
+
+- No duplicate customers
+- Consistent data types
+- No missing target values
+- Leakage-free feature generation
+- Features derived exclusively from historical information
+
+This feature engineering pipeline produced a robust dataset for customer segmentation, churn prediction and explainable machine learning.
+
+---
+
+# 🎯 Customer Segmentation
+
+Customer segmentation was performed using **K-Means Clustering** to identify groups of riders with similar behavioural patterns.
+
+Unlike churn prediction, which attempts to predict future customer behaviour, clustering is an unsupervised learning technique that discovers natural groupings within the data without using the target variable.
+
+---
+
+## Clustering Features
+
+The clustering model was built using behavioural variables that describe customer activity and value.
+
+The selected features included:
+
+- Recency
+- Frequency
+- Monetary Value
+- Monthly Trip Frequency
+- Customer Lifetime Value
+- Trips in the Last 30 Days
+- Average Days Between Trips
+- Average Trip Duration
+- Average Tip Rate
+- Account Age
+
+These features provide a comprehensive view of customer engagement and purchasing behaviour.
+
+---
+
+## Feature Scaling
+
+Because K-Means is a distance-based algorithm, all numerical variables were standardised using **StandardScaler** before clustering.
+
+Standardisation ensures that variables measured on different scales contribute equally to the clustering process.
+
+---
+
+## Selecting the Optimal Number of Clusters
+
+Two complementary techniques were used to determine the appropriate number of customer segments.
+
+### Elbow Method
+
+The Elbow Method evaluates the Within-Cluster Sum of Squares (WCSS) across different numbers of clusters.
+
+The optimal number of clusters is identified where additional clusters provide diminishing improvements in model fit.
+
+### Silhouette Score
+
+The Silhouette Score measures how well observations fit within their assigned cluster compared with neighbouring clusters.
+
+Higher silhouette scores indicate better cluster separation and more cohesive customer groups.
+
+The combined results from the Elbow Method and Silhouette analysis supported the final choice of **four customer clusters**.
+
+---
+
+## Customer Profiles
+
+The clustering algorithm identified four distinct behavioural groups.
+
+| Customer Segment | Characteristics | Business Strategy |
+|------------------|-----------------|-------------------|
+| Champions | High spending, frequent trips, recent activity | Reward loyalty and maintain engagement |
+| Regular Riders | Moderate usage and spending | Increase engagement through personalised promotions |
+| Dormant Riders | Low recent activity and long periods of inactivity | Target with reactivation campaigns and incentives |
+| VIP Riders | Small group of exceptionally valuable customers with no observed churn | Provide premium services and exclusive rewards |
+
+---
+
+## Comparing K-Means with Business Segmentation
+
+The data-driven K-Means clusters were compared with the existing business-defined customer segments.
+
+Although there was partial agreement between both approaches, the comparison showed that unsupervised learning identified behavioural patterns that were not fully captured by the rule-based segmentation.
+
+This demonstrates how machine learning can complement traditional business segmentation by uncovering previously unseen customer groups.
+
+---
+
+## Business Value
+
+The customer segmentation analysis provides several practical benefits:
+
+- Enables targeted marketing campaigns.
+- Supports personalised customer engagement.
+- Identifies high-value customers for loyalty programmes.
+- Highlights inactive customers for reactivation campaigns.
+- Improves allocation of marketing resources through behaviour-based targeting.
+
+While the churn prediction models demonstrated limited predictive performance on this dataset, customer segmentation generated meaningful business insights that can directly support customer retention strategies.
+
+---
+
+# 🤖 Churn Prediction
+
+Customer churn prediction was formulated as a binary classification problem, where the objective was to identify riders who would become inactive during a future prediction window based on their historical behaviour.
+
+A leakage-free temporal approach was adopted to ensure that only information available before the prediction period was used for modelling.
+
+---
+
+## Train-Test Split
+
+The modelling dataset was divided into training and testing sets using a stratified train-test split to preserve the class distribution.
+
+This approach allows model performance to be evaluated on previously unseen data, providing a more realistic assessment of predictive performance.
+
+---
+
+## Data Preprocessing Pipeline
+
+To ensure a reproducible workflow and prevent data leakage, all preprocessing steps were incorporated into a Scikit-learn Pipeline.
+
+### Numerical Features
+
+- Median imputation for missing values
+- Standardisation using StandardScaler
+
+### Categorical Features
+
+- Most frequent value imputation
+- One-Hot Encoding
+
+Embedding preprocessing within the pipeline ensures that transformations learned from the training data are consistently applied to unseen data.
+
+---
+
+## Machine Learning Models
+
+Three classification models were evaluated.
+
+### Logistic Regression
+
+Logistic Regression was used as the baseline model due to its simplicity, interpretability and widespread use in customer analytics.
+
+### Random Forest
+
+Random Forest was evaluated to capture potential non-linear relationships and interactions between behavioural features.
+
+### XGBoost
+
+XGBoost was included as an advanced gradient boosting algorithm capable of modelling more complex customer behaviour.
+
+---
+
+## Model Evaluation
+
+Models were evaluated using multiple classification metrics.
+
+| Metric | Purpose |
+|---------|---------|
+| Accuracy | Overall prediction performance |
+| Precision | Reliability of predicted churners |
+| Recall | Ability to identify actual churners |
+| F1 Score | Balance between Precision and Recall |
+| ROC-AUC | Overall ability to distinguish churners from active customers |
+| Average Precision | Performance on the minority class |
+
+ROC curves, Precision-Recall curves and confusion matrices were also generated to compare model performance visually.
+
+---
+
+## Model Findings
+
+Although multiple machine learning algorithms were evaluated, all models achieved similar predictive performance.
+
+Further investigation showed that customers who eventually churned exhibited behavioural patterns that were very similar to customers who remained active.
+
+Comparison of key behavioural variables—including recency, trip frequency and spending—revealed only small differences between the two groups.
+
+As a result, the available historical features contained limited predictive signal for future churn.
+
+Rather than forcing additional feature engineering or excessive model tuning, the project adopted an evidence-based conclusion that the current synthetic dataset is not sufficiently informative for reliable individual churn prediction.
+
+---
+
+## Business Interpretation
+
+The modelling process demonstrated that strong machine learning algorithms cannot compensate for weak predictive signal within the underlying data.
+
+This finding is itself valuable from a business perspective, as it highlights the importance of collecting richer behavioural information before deploying predictive retention models.
+
+Rather than relying solely on churn prediction, organisations can combine predictive modelling with customer segmentation to support more targeted customer engagement strategies.
+
+This balanced approach reflects real-world data science practice, where understanding model limitations is just as important as achieving strong predictive performance.
+
+---
+
+# 🔍 Model Explainability
+
+Understanding why a machine learning model makes a prediction is just as important as the prediction itself.
+
+To improve model transparency and interpretability, explainability techniques were applied to investigate how different behavioural features influenced churn predictions.
+
+---
+
+## Feature Importance
+
+Feature importance was used to identify the variables that contributed most to the model's predictions.
+
+This analysis provides a high-level understanding of which behavioural characteristics were most influential during model training.
+
+Examples of important features included:
+
+- Recency (Days Since Last Trip)
+- Trip Frequency
+- Customer Lifetime Value
+- Monthly Trip Frequency
+- Monetary Value
+- Average Days Between Trips
+
+These variables represent key aspects of customer engagement and purchasing behaviour.
+
+---
+
+## SHAP (SHapley Additive exPlanations)
+
+SHAP values were used to explain individual predictions and quantify the contribution of each feature.
+
+Unlike traditional feature importance, SHAP provides both global and local explanations.
+
+### Global Explainability
+
+Global SHAP analysis was used to:
+
+- Rank the overall importance of features.
+- Understand how each variable influenced predictions across the entire dataset.
+- Identify consistent behavioural patterns learned by the model.
+
+### Local Explainability
+
+Local SHAP explanations were generated for individual customers to illustrate how specific behavioural characteristics influenced predicted churn risk.
+
+This enables analysts and business stakeholders to understand the reasoning behind individual predictions rather than treating the model as a black box.
+
+---
+
+## Permutation Importance
+
+Permutation Importance was used as an additional validation technique.
+
+Each feature was randomly shuffled while measuring the impact on model performance.
+
+Features that produced a larger decrease in predictive performance were considered more influential.
+
+This approach provides a model-agnostic assessment of feature importance and complements SHAP analysis.
+
+---
+
+## Explainability Findings
+
+The explainability analysis showed that the model relied primarily on behavioural features related to customer activity and spending.
+
+However, feature importance values were generally modest, reflecting the limited separation between churned and active customers observed during model evaluation.
+
+These findings were consistent with the overall modelling results and reinforced the conclusion that the available historical data contained limited predictive information for future churn.
+
+---
+
+## Business Value
+
+Model explainability improves confidence in machine learning by making predictions transparent and interpretable.
+
+Rather than providing only a churn probability, explainability enables business stakeholders to understand the behavioural factors influencing customer risk.
+
+This supports more informed decision-making and helps ensure that predictive models are used responsibly within customer retention strategies.
+
+---
+
+# 📊 Key Results
+
+The project evaluated both supervised and unsupervised machine learning techniques to understand customer behaviour and support retention strategies.
+
+## Customer Segmentation
+
+The K-Means clustering algorithm successfully identified four distinct behavioural customer groups.
+
+The Elbow Method and Silhouette Score were used to determine the optimal number of clusters before fitting the final model.
+
+The resulting customer segments included:
+
+- Champions
+- Regular Riders
+- Dormant Riders
+- VIP Riders
+
+These segments demonstrated meaningful differences in customer activity, spending behaviour and engagement, providing actionable insights for targeted marketing and customer retention.
+
+---
+
+## Churn Prediction
+
+Three machine learning models were evaluated:
+
+- Logistic Regression
+- Random Forest
+- XGBoost
+
+Model performance was assessed using:
+
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- ROC-AUC
+- Average Precision
+
+Although multiple algorithms were explored, all models produced similar predictive performance.
+
+Further analysis showed that churned and active riders displayed very similar behavioural characteristics across key variables such as recency, frequency and spending.
+
+Consequently, the available historical features contained limited predictive signal for reliable individual churn prediction.
+
+Rather than pursuing unnecessary model complexity, the project adopted an evidence-based conclusion that the synthetic dataset was not sufficiently informative for accurate churn prediction.
+
+---
+
+## Model Explainability
+
+Feature Importance, SHAP and Permutation Importance were used to investigate how behavioural variables influenced model predictions.
+
+The explainability analysis confirmed that customer activity and spending behaviour contributed most to model predictions while also supporting the conclusion that the available features provided only modest predictive information.
+
+---
+
+## Overall Outcome
+
+Although the churn prediction models demonstrated limited predictive performance, the project successfully delivered valuable customer intelligence through behavioural feature engineering, explainable machine learning and customer segmentation.
+
+The combination of supervised and unsupervised learning provides a realistic example of how data science supports business decision-making, even when predictive performance is constrained by the available data.
+
+---
+
+---
+
+# 📈 Project Visualizations
+
+The following visualisations summarise the main findings from the RideWise London customer intelligence project.
+
+They provide a quick overview of the churn prediction results, model explainability and customer segmentation analysis.
+
+---
+
+## Churn Prediction Performance
+
+### ROC Curve
+
+The ROC curve evaluates how well the churn prediction models distinguish between churned and active riders across different classification thresholds.
+
+![ROC Curve](reports/figures/Roc_curve.png)
+
+The models produced similar ROC-AUC results, indicating that the available historical behavioural features contained limited predictive signal for future churn.
+
+---
+
+## Model Explainability
+
+### SHAP Summary Plot
+
+The SHAP summary plot explains how each feature influenced the churn model's predictions.
+
+![SHAP Summary Plot](reports/figures/SHAP_summary_plot.png)
+
+Features related to rider activity, trip frequency, spending and recency contributed most to the model predictions.
+
+However, the overall SHAP effects were modest, which was consistent with the limited separation observed between churned and active riders.
+
+---
+
+## Customer Segmentation
+
+### Elbow Method
+
+The Elbow Method was used to assess how the within-cluster sum of squares changed as the number of clusters increased.
+
+![Elbow Method](reports/figures/elbow_method_plot.png)
+
+The point where the improvement began to slow helped identify a reasonable number of customer clusters.
+
+---
+
+### Silhouette Score
+
+The Silhouette Score was used to evaluate how well riders were grouped within their assigned clusters and separated from other clusters.
+
+![Silhouette Score](reports/figures/silhouette_score_plot.png)
+
+The combined evidence from the Elbow Method and Silhouette Score supported the final four-cluster solution.
+
+---
+
+### K-Means Cluster Heatmap
+
+The cluster heatmap compares the standardised behavioural characteristics of the customer groups identified by K-Means.
+
+![K-Means Cluster Heatmap](reports/figures/K-Means_cluster_heatmap.png)
+
+The heatmap supported the interpretation of four distinct customer profiles:
+
+- Champions
+- Regular Riders
+- Dormant Riders
+- VIP Riders
+
+These customer groups demonstrated meaningful differences in recency, frequency, spending, trip behaviour and customer value.
+
+---
+
+## Visualisation Summary
+
+The churn prediction visualisations showed that the available behavioural data had limited ability to reliably separate churned riders from active riders.
+
+In contrast, the customer segmentation visualisations identified meaningful behavioural differences between customer groups.
+
+This supported the project's main conclusion that customer segmentation provided more immediate and actionable business value than individual churn prediction for the available dataset.
+
+# 💼 Business Recommendations
+
+The analysis demonstrates that customer segmentation provides more actionable business value than individual churn prediction for the available dataset.
+
+Based on the findings, the following recommendations are proposed.
+
+## Champions
+
+**Profile**
+
+- High spending
+- Frequent trips
+- Highly engaged customers
+- Low observed churn
+
+**Recommended Actions**
+
+- Introduce premium loyalty rewards.
+- Offer referral incentives.
+- Provide early access to new platform features.
+- Reward long-term customer loyalty.
+
+---
+
+## Regular Riders
+
+**Profile**
+
+- Consistent platform usage
+- Moderate spending
+- Stable engagement
+
+**Recommended Actions**
+
+- Increase engagement through personalised promotions.
+- Encourage higher trip frequency with targeted discounts.
+- Recommend subscription or membership programmes.
+- Promote cross-selling opportunities.
+
+---
+
+## Dormant Riders
+
+**Profile**
+
+- Low recent activity
+- Long periods between trips
+- Higher inactivity risk
+
+**Recommended Actions**
+
+- Launch targeted win-back campaigns.
+- Send personalised reminders and promotional offers.
+- Investigate barriers to continued platform usage.
+- Monitor behaviour following reactivation campaigns.
+
+---
+
+## VIP Riders
+
+**Profile**
+
+- Small group of exceptionally valuable customers.
+- High spending and frequent platform usage.
+- No observed churn during the study period.
+
+**Recommended Actions**
+
+- Deliver personalised customer support.
+- Provide exclusive rewards and recognition.
+- Offer premium benefits and tailored incentives.
+- Maintain long-term customer relationships through proactive engagement.
+
+---
+
+## Strategic Recommendations
+
+Although the predictive models demonstrated limited ability to identify individual churners, the project highlights several opportunities for improving customer retention.
+
+### Short-Term
+
+- Use behavioural customer segmentation to guide marketing campaigns.
+- Prioritise customer engagement based on behavioural profiles.
+- Develop targeted retention strategies for dormant customers.
+
+### Medium-Term
+
+- Collect richer behavioural data, including longer-term customer engagement information.
+- Improve data quality by expanding historical observations.
+- Incorporate additional operational and contextual variables into future modelling.
+
+### Long-Term
+
+- Retrain predictive models as more behavioural data become available.
+- Monitor customer segments over time to detect behavioural changes.
+- Combine predictive modelling with customer segmentation to support data-driven retention strategies.
+
+---
+
+## Business Value
+
+This project demonstrates how machine learning can support customer intelligence beyond prediction alone.
+
+Rather than relying exclusively on predictive accuracy, the combination of behavioural feature engineering, customer segmentation and explainable machine learning provides practical insights that can improve customer engagement, marketing effectiveness and long-term retention strategies.
+
+
+---
+
+# ⚠️ Project Limitations
+
+Like many real-world machine learning projects, this analysis has several limitations that should be considered when interpreting the results.
+
+## Synthetic Dataset
+
+The project uses a synthetic dataset designed to simulate customer behaviour within a ride-hailing platform.
+
+Although suitable for demonstrating machine learning techniques, synthetic data may not capture the full complexity of real customer behaviour.
+
+---
+
+## Limited Predictive Signal
+
+The behavioural characteristics of churned and active customers were highly similar across the available historical features.
+
+As a result, the machine learning models demonstrated limited ability to distinguish future churners from active riders.
+
+This finding highlights the importance of evaluating data quality before assuming that increasingly complex models will improve predictive performance.
+
+---
+
+## Limited Historical Engagement Data
+
+The session dataset covered only a limited observation period, preventing the creation of reliable long-term engagement features.
+
+Consequently, session-derived variables were excluded from the final modelling dataset.
+
+---
+
+## Generalisability
+
+The findings presented in this project are specific to the available synthetic dataset.
+
+Applying the same modelling approach to production data would require additional validation, feature engineering and continuous model monitoring.
+
+---
+
+# 🚀 Future Improvements
+
+Several enhancements could further strengthen the project if richer data became available.
+
+## Data Improvements
+
+- Collect longer periods of customer behavioural data.
+- Include cancellation history and customer support interactions.
+- Incorporate customer satisfaction and feedback data.
+- Add richer marketing campaign response information.
+
+---
+
+## Feature Engineering
+
+Potential future features include:
+
+- Behavioural trends over time.
+- Rolling engagement metrics.
+- Seasonal travel behaviour.
+- Promotion response history.
+- Customer lifetime behavioural trajectories.
+
+---
+
+## Machine Learning
+
+Future modelling improvements could include:
+
+- Time-series feature engineering.
+- Survival analysis for customer retention.
+- Gradient boosting optimisation.
+- Probability calibration.
+- Cost-sensitive learning.
+- Automated feature selection.
+
+---
+
+## Business Analytics
+
+Future work could include:
+
+- Customer lifetime value prediction.
+- Marketing campaign optimisation.
+- Promotion response modelling.
+- Personalised recommendation systems.
+- Dynamic customer segmentation.
+
+---
+
+# 🚀 Installation
+
+## Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/Ridewise_10Alytics.git
-cd Ridewise_10Alytics
+git clone https://github.com/yourusername/RideWise_London.git
+
+cd RideWise_London
 ```
 
-2. **Create virtual environment**
+---
+
+## Create a Virtual Environment
+
+### Windows
 
 ```bash
-# Windows
 python -m venv venv
-venv\Scripts\activate
 
-# macOS/Linux
+venv\Scripts\activate
+```
+
+### macOS / Linux
+
+```bash
 python3 -m venv venv
+
 source venv/bin/activate
 ```
 
-3. **Install dependencies**
+---
+
+## Install Dependencies
 
 ```bash
 pip install --upgrade pip
+
 pip install -r requirements.txt
 ```
 
-4. **Set up data** (if not already present)
+---
 
-```bash
-# Place your CSV files in data/raw/
-# Or use the provided synthetic data generator
-python scripts/generate_synthetic_data.py
-```
+# ▶️ Running the Project
 
-5. **Train models**
+Run the notebooks in the following order:
 
-```bash
-python scripts/train_models.py
-```
+1. 01_preprocessing.ipynb
+2. 02_feature_engineering.ipynb
+3. 03_churn_prediction.ipynb
+4. 04_explainability.ipynb
+5. 05_customer_segmentation_and_clustering.ipynb
 
-6. **Start the API server**
-
-```bash
-cd src/api
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-7. **Launch the dashboard** (in a new terminal)
-
-```bash
-streamlit run dashboard/app.py
-```
-
-### Access Points
-
-- **API Documentation:** http://localhost:8000/docs
-- **Analytics Dashboard:** http://localhost:8501
-- **Health Check:** http://localhost:8000/health
+Each notebook builds on the outputs generated by the previous notebook.
 
 ---
 
-## 📊 Data Pipeline
+# 📜 License
 
-### Data Sources
-
-The project uses 5 primary data tables (see [`data/README.md`](data/README.md) for complete data dictionary):
-
-1. **Riders** (200K+ records): Customer profiles, demographics, loyalty status
-2. **Trips** (800K+ records): Transaction history, pricing, geospatial data
-3. **Drivers** (50K+ records): Driver profiles, ratings, performance metrics
-4. **Sessions** (1.5M+ records): App engagement, conversion tracking
-5. **Promotions** (500+ records): Marketing campaigns, A/B tests
-
-### Feature Engineering Pipeline
-
-```python
-# Example: RFM Feature Generation
-from src.features.rfm import RFMAnalyzer
-
-rfm = RFMAnalyzer()
-customer_features = rfm.calculate_rfm_scores(
-    trips_df,
-    customer_id='user_id',
-    transaction_date='pickup_time',
-    monetary_value='fare'
-)
-```
-
-**Generated Features (50+):**
-
-- **RFM Metrics:** Recency, Frequency, Monetary scores
-- **Behavioral:** Avg trip distance, peak hour usage, cancellation rate
-- **Temporal:** Days since signup, trip frequency trends, seasonality
-- **Engagement:** Session duration, pages visited, conversion rate
-- **Contextual:** Weather patterns, promotion usage, city-specific metrics
+This project is licensed under the MIT License.
 
 ---
 
-## 🤖 Model Development
+# 👨‍💻 Author
 
-### Customer Segmentation
+**Ransom Chukwu**
 
-**Algorithm:** K-Means Clustering  
-**Optimal Clusters:** 4 (determined via Elbow Method + Silhouette Score)
+Medical Doctor | Public Health Professional | Data Scientist
 
-**Segment Profiles:**
+## Areas of Interest
 
-| Segment                  | Characteristics                              | Size | Strategy                                  |
-| ------------------------ | -------------------------------------------- | ---- | ----------------------------------------- |
-| **High-Value Loyalists** | High frequency, high spend, low churn risk   | 15%  | VIP treatment, exclusive perks            |
-| **Occasional Users**     | Low frequency, medium spend, moderate risk   | 40%  | Engagement campaigns, incentives          |
-| **At-Risk Churners**     | Declining activity, high churn probability   | 20%  | Retention offers, win-back campaigns      |
-| **New Adopters**         | Recent signups, low activity, high potential | 25%  | Onboarding optimization, early engagement |
-
-### Churn Prediction
-
-**Models Evaluated:**
-
-| Model               | AUC-ROC  | Precision | Recall   | F1-Score |
-| ------------------- | -------- | --------- | -------- | -------- |
-| Logistic Regression | 0.82     | 0.75      | 0.68     | 0.71     |
-| Random Forest       | 0.87     | 0.81      | 0.74     | 0.77     |
-| **XGBoost (Best)**  | **0.89** | **0.84**  | **0.78** | **0.81** |
-
-**Key Predictive Features:**
-
-1. Days since last trip (Recency)
-2. Trip frequency (last 30/60/90 days)
-3. Total spend (Monetary)
-4. Session engagement decline
-5. Promotion redemption rate
+- Machine Learning
+- Healthcare Data Science
+- Customer Analytics
+- Predictive Modelling
+- Explainable AI
+- Health Informatics
 
 ---
 
-## 📡 API Documentation
-
-### Core Endpoints
-
-#### 1. Predict Churn Risk
-
-```http
-POST /api/v1/predict/churn
-Content-Type: application/json
-
-{
-  "user_id": "USR_123456",
-  "features": {
-    "recency_days": 45,
-    "frequency_30d": 2,
-    "monetary_total": 156.50,
-    "avg_session_duration": 8.5
-  }
-}
-```
-
-**Response:**
-
-```json
-{
-  "user_id": "USR_123456",
-  "churn_probability": 0.73,
-  "risk_level": "High",
-  "segment": "At-Risk Churners",
-  "recommended_action": "Immediate retention offer",
-  "confidence": 0.89
-}
-```
-
-#### 2. Get Customer Segment
-
-```http
-GET /api/v1/segment/{user_id}
-```
-
-#### 3. Batch Predictions
-
-```http
-POST /api/v1/predict/batch
-```
-
-**Full API documentation:** http://localhost:8000/docs
-
----
-
-## 📈 Evaluation Metrics
-
-### Model Performance
-
-- **Churn Prediction AUC:** 0.87 (Target: >0.80) ✅
-- **Segmentation Silhouette Score:** 0.65 (Good separation)
-- **API Latency:** <500ms (Target: <1s) ✅
-- **Prediction Accuracy (Top 15%):** 82%
-
-### Business Impact
-
-- **Churn Reduction:** 12% (projected)
-- **Campaign ROI Improvement:** 35%
-- **Customer Lifetime Value:** +18% for retained customers
-
----
-
-## Roadmap
-
-### Phase 1: Foundation (Weeks 1-3)
-
-- [x] Data pipeline & feature engineering
-- [x] Baseline models (Logistic Regression, K-Means)
-- [x] API development & deployment
-- [x] Analytics dashboard
-
-### Phase 2: Enhancement (Weeks 4-6)
-
-- [ ] Advanced models (XGBoost, Neural Networks)
-- [ ] SHAP-based model interpretability
-- [ ] A/B testing framework
-- [ ] Real-time streaming pipeline
-
-### Phase 3: Production (Weeks 7-9)
-
-- [ ] PostgreSQL migration
-- [ ] Redis caching layer
-- [ ] Kubernetes deployment
-- [ ] Comprehensive monitoring (Prometheus, Grafana)
-
----
-
-## Contributing
-
-Contributions are welcome! Please follow these guidelines:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-**Code Standards:**
-
-- Follow PEP 8 style guide
-- Add unit tests for new features
-- Update documentation as needed
-
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## Contact & Support
-
-- **Project Maintainer:** [Your Name]
-- **Email:** your.email@example.com
-- **Issues:** [GitHub Issues](https://github.com/yourusername/Ridewise_10Alytics/issues)
-- **Documentation:** [Wiki](https://github.com/yourusername/Ridewise_10Alytics/wiki)
-
----
-
-<div align="center">
-
-**Built for Data Science Excellence**
-
-Star this repository if you find it helpful!
-
-</div>
+⭐ If you found this project interesting, consider starring the repository and connecting with me on LinkedIn.
